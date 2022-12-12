@@ -1,0 +1,24 @@
+openapi: 3.0.0
+info:
+  title: Hello API
+  version: 1.0.0
+servers:
+  - url: http://localhost:10086
+paths:
+  /:
+    get:
+      description: Returns a greeting
+      parameters:
+        - name: name
+          in: query
+          description: The name to use in the greeting
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: A successful response
+          content:
+            text/html:
+              schema:
+                type: string

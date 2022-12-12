@@ -1,34 +1,24 @@
 package main
 
+// This file defines a simple "Hello, world!" HTTP Cloud Function.
+// It reads a "name" parameter from the request and writes a response.
+
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-type Request struct {
-	T string `json:"t"`
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
+func hello(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		name = "World"
 	}
-
-	var request Request
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, "<p>Hello, %s</p>", request.T)
+	fmt.Fprintf(w, "<p>Hello, %s!</p>", name)
 }
 
 func main() {
-	http.HandleFunc("/", handler)
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := "10086"
+	http.HandleFunc("/", hello)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
